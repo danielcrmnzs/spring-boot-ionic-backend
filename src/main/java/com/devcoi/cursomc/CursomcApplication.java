@@ -1,5 +1,6 @@
 package com.devcoi.cursomc;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
@@ -76,17 +77,17 @@ public class CursomcApplication implements CommandLineRunner {
 		Categoria cat6 = new Categoria(null, "Decoração");
 		Categoria cat7 = new Categoria(null, "Perfumaria");
 
-		Produto p1 = new Produto(null, "Computador", 2000.00);
-		Produto p2 = new Produto(null, "Impressora", 800.00);
-		Produto p3 = new Produto(null, "Mouse", 80.00);
-		Produto p4 = new Produto(null, "Mesa de escritório", 300.00);
-		Produto p5 = new Produto(null, "Toalha", 50.00);
-		Produto p6 = new Produto(null, "Colcha", 200.00);
-		Produto p7 = new Produto(null, "TV true color", 1200.00);
-		Produto p8 = new Produto(null, "Roçadeira", 800.00);
-		Produto p9 = new Produto(null, "Abajour", 100.00);
-		Produto p10 = new Produto(null, "Pendente", 180.00);
-		Produto p11 = new Produto(null, "Shampoo", 90.00);
+		Produto p1 = new Produto(null, "Computador", new BigDecimal(2000.00));
+		Produto p2 = new Produto(null, "Impressora", new BigDecimal(800.00));
+		Produto p3 = new Produto(null, "Mouse", new BigDecimal(80.00));
+		Produto p4 = new Produto(null, "Mesa de escritório", new BigDecimal(300.00));
+		Produto p5 = new Produto(null, "Toalha", new BigDecimal(50.00));
+		Produto p6 = new Produto(null, "Colcha", new BigDecimal(200.00));
+		Produto p7 = new Produto(null, "TV true color", new BigDecimal(1200.00));
+		Produto p8 = new Produto(null, "Roçadeira", new BigDecimal(800.00));
+		Produto p9 = new Produto(null, "Abajour", new BigDecimal(100.00));
+		Produto p10 = new Produto(null, "Pendente", new BigDecimal(180.00));
+		Produto p11 = new Produto(null, "Shampoo", new BigDecimal(90.00));
 		
 		cat1.getProdutos().addAll(Arrays.asList(p1, p2, p3));
 		cat2.getProdutos().addAll(Arrays.asList(p2, p4));
@@ -157,9 +158,9 @@ public class CursomcApplication implements CommandLineRunner {
 		pedidoRepository.saveAll(Arrays.asList(ped1, ped2));
 		pagamentoRepository.saveAll(Arrays.asList(pagto1, pagto2));
 
-		ItemPedido ip1 = new ItemPedido(ped1, p1, 0.00, 1, 2000.00);
-		ItemPedido ip2 = new ItemPedido(ped1, p3, 0.00, 2, 80.00);
-		ItemPedido ip3 = new ItemPedido(ped2, p2, 100.0, 1, 800.00);
+		ItemPedido ip1 = new ItemPedido(ped1, p1, new BigDecimal(0.00), 1);
+		ItemPedido ip2 = new ItemPedido(ped1, p3, new BigDecimal(0.00), 2);
+		ItemPedido ip3 = new ItemPedido(ped2, p2, new BigDecimal(100.0), 1);
 		
 		ped1.getItens().addAll(Arrays.asList(ip1, ip2));
 		ped2.getItens().addAll(Arrays.asList(ip3));

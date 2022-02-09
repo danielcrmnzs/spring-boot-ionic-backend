@@ -1,6 +1,7 @@
 package com.devcoi.cursomc.domain;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -19,25 +20,23 @@ public class ItemPedido implements Serializable {
 	@EmbeddedId
 	private ItemPedidoPK id = new ItemPedidoPK();
 
-	private Double desconto;
+	private BigDecimal desconto;
 	private Integer quantidade;
-	private Double preco;
 
 	public ItemPedido() {
 
 	}
 
-	public ItemPedido(Pedido pedido, Produto produto, Double desconto, Integer quantidade, Double preco) {
+	public ItemPedido(Pedido pedido, Produto produto, BigDecimal desconto, Integer quantidade) {
 		super();
 		id.setPedido(pedido);
 		id.setProduto(produto);
 		this.desconto = desconto;
 		this.quantidade = quantidade;
-		this.preco = preco;
 	}
 	
-	public Double getSubTotal() {
-		return (preco - desconto) * quantidade;
+	public BigDecimal getSubTotal() {
+		return (getPreco().subtract(desconto)).multiply(new BigDecimal(quantidade));
 	}
 
 	@JsonIgnore
@@ -57,11 +56,11 @@ public class ItemPedido implements Serializable {
 		this.id = id;
 	}
 
-	public Double getDesconto() {
+	public BigDecimal getDesconto() {
 		return desconto;
 	}
 
-	public void setDesconto(Double desconto) {
+	public void setDesconto(BigDecimal desconto) {
 		this.desconto = desconto;
 	}
 
@@ -73,12 +72,8 @@ public class ItemPedido implements Serializable {
 		this.quantidade = quantidade;
 	}
 
-	public Double getPreco() {
-		return preco;
-	}
-
-	public void setPreco(Double preco) {
-		this.preco = preco;
+	public BigDecimal getPreco() {
+		return getProduto().getPreco();
 	}
 
 	@Override
