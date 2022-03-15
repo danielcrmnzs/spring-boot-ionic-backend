@@ -16,11 +16,14 @@ import org.springframework.stereotype.Service;
 import com.devcoi.cursomc.domain.Cidade;
 import com.devcoi.cursomc.domain.Cliente;
 import com.devcoi.cursomc.domain.Endereco;
+import com.devcoi.cursomc.domain.enums.Perfil;
 import com.devcoi.cursomc.domain.enums.TipoCliente;
 import com.devcoi.cursomc.dto.ClienteDTO;
 import com.devcoi.cursomc.dto.ClienteNewDTO;
 import com.devcoi.cursomc.repositories.ClienteRepository;
 import com.devcoi.cursomc.repositories.EnderecoRepository;
+import com.devcoi.cursomc.security.UserSS;
+import com.devcoi.cursomc.services.exceptions.AuthorizationException;
 import com.devcoi.cursomc.services.exceptions.DataIntegrityException;
 import com.devcoi.cursomc.services.exceptions.ObjectNotFoundException;
 
@@ -29,14 +32,20 @@ public class ClienteService {
 
 	@Autowired
 	private ClienteRepository repo;
-	
+
 	@Autowired
 	private EnderecoRepository enderecoRepository;
 
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
-	
+
 	public Cliente find(Integer id) {
+
+		UserSS user = UserService.authenticated();
+		if (user == null || !user.hasHole(Perfil.ADMIN) && !id.equals(user.getId())) {
+			throw new AuthorizationException("Acesso negado");
+		}
+
 		Optional<Cliente> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 				"Objeto não encontrado! Id: " + id + " , Tipo: " + Cliente.class.getSimpleName()));
@@ -85,9 +94,11 @@ public class ClienteService {
 	}
 
 	public Cliente fromDTO(ClienteNewDTO objDto) {
-		Cliente cli = new Cliente(null, objDto.getNome(), objDto.getEmail(), objDto.getCpfOuCnpj(), TipoCliente.toEnum(objDto.getTipo()), passwordEncoder.encode(objDto.getSenha()));
+		Cliente cli = new Cliente(null, objDto.getNome(), objDto.getEmail(), objDto.getCpfOuCnpj(),
+				TipoCliente.toEnum(objDto.getTipo()), passwordEncoder.encode(objDto.getSenha()));
 		Cidade cid = new Cidade(objDto.getCidadeId(), null, null);
-		Endereco end = new Endereco(null, objDto.getLogradouro(), objDto.getNumero(), objDto.getComplemento(), objDto.getBairro(), objDto.getCep(), cli, cid);
+		Endereco end = new Endereco(null, objDto.getLogradouro(), objDto.getNumero(), objDto.getComplemento(),
+				objDto.getBairro(), objDto.getCep(), cli, cid);
 		cli.getEnderecos().add(end);
 		cli.getTelefones().add(objDto.getTelefone1());
 		if (objDto.getTelefone2() != null) {
@@ -96,7 +107,7 @@ public class ClienteService {
 		if (objDto.getTelefone3() != null) {
 			cli.getTelefones().add(objDto.getTelefone3());
 		}
-		
+
 		return cli;
 	}
 
