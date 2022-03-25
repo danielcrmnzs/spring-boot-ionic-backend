@@ -12,6 +12,7 @@ import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.devcoi.cursomc.utils.FileUtils;
 
 @Service
 public class S3Service {
@@ -28,7 +29,7 @@ public class S3Service {
 		try {
 			File file = new File(localFilePath);
 			LOG.info("Iniciando upload...");
-			s3client.putObject(new PutObjectRequest(bucketName, "teste.jpg", file));
+			s3client.putObject(new PutObjectRequest(bucketName, FileUtils.getNomeSemExtensao(file), file));
 			LOG.info("Upload finalizado.");
 		} catch (AmazonServiceException e) {
 			LOG.warn("AmazonServiceException: " + e.getErrorMessage());
