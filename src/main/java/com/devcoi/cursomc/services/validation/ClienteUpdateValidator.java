@@ -3,6 +3,7 @@ package com.devcoi.cursomc.services.validation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintValidator;
@@ -37,7 +38,10 @@ public class ClienteUpdateValidator implements ConstraintValidator<ClienteUpdate
 		
 		List<FieldMessage> list = new ArrayList<>();
 		
-		Cliente aux = repo.findByEmail(objDto.getEmail());
+		Optional<Cliente> optional = repo.findByEmail(objDto.getEmail());
+		
+		Cliente aux = optional.orElse(null);
+		
 		if (aux != null && !aux.getId().equals(uriId)) {
 			list.add(new FieldMessage("email", "Email já existente"));
 		}

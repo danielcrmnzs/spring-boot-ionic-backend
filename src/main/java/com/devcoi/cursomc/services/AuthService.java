@@ -1,5 +1,6 @@
 package com.devcoi.cursomc.services;
 
+import java.util.Optional;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +26,10 @@ public class AuthService {
 	private Random random = new Random();
 
 	public void sendNewPassword(String email) {
-		Cliente cliente = clienteRepository.findByEmail(email);
-		if (cliente == null) {
-			throw new ObjectNotFoundException("Email não encontrado");
-		}
+		
+		Optional<Cliente> obj = clienteRepository.findByEmail(email);
+		Cliente cliente = obj.orElseThrow(() -> new ObjectNotFoundException(
+				"Cliente com email: " + email + " não encontrado"));
 
 		String newPassword = newPassword();
 		cliente.setSenha(bCryptPasswordEncoder.encode(newPassword));

@@ -1,5 +1,7 @@
 package com.devcoi.cursomc.services;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,11 +20,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		Cliente cliente = repo.findByEmail(email);
 
-		if (cliente == null) {
-			throw new UsernameNotFoundException(email);
-		}
+		Optional<Cliente> obj = repo.findByEmail(email);
+		Cliente cliente = obj.orElseThrow(() -> new UsernameNotFoundException(email));
 
 		return new UserSS(cliente.getId(), cliente.getEmail(), cliente.getSenha(), cliente.getPerfis());
 	}
